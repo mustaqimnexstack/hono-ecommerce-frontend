@@ -1,0 +1,3 @@
+'use client';
+import Link from 'next/link'; import type { Product } from '@store/types'; import { money } from '@/lib/api'; import { useCart } from '@/store/cart';
+export function ProductCard({ product }: { product: Product }) { const add = useCart(s => s.add); return <article className="card">{product.images[0] && <img src={product.images[0].url} alt={product.images[0].altText || product.name} />}<h3><Link href={`/products/${product.slug}`}>{product.name}</Link></h3><p>{money(product.priceCents)}</p><button disabled={!product.stock} onClick={() => add(product)}>{product.stock ? 'Add to cart' : 'Sold out'}</button></article>; }

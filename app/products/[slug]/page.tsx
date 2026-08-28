@@ -1,0 +1,3 @@
+'use client';
+import { useEffect,useState } from 'react'; import { api,money } from '@/lib/api'; import type { Product } from '@store/types'; import { useCart } from '@/store/cart';
+export default function ProductDetail({params}:{params:Promise<{slug:string}>}) { const [p,setP]=useState<Product|null>(null); const add=useCart(s=>s.add); useEffect(()=>{params.then(x=>api<Product>(`/products/${x.slug}`).then(setP));},[params]); if(!p)return <p>Loading…</p>; return <section className="row"><div>{p.images[0]&&<img style={{maxWidth:420,width:'100%'}} src={p.images[0].url} alt={p.name}/>}</div><div><h1>{p.name}</h1><p>{p.description}</p><h2>{money(p.priceCents)}</h2><button onClick={()=>add(p)} disabled={!p.stock}>{p.stock?'Add to cart':'Sold out'}</button></div></section>; }
