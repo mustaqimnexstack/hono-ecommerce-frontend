@@ -1,3 +1,25 @@
-'use client'; import { FormEvent, useEffect, useState } from 'react'; import Link from 'next/link'; import { api, money } from '@/lib/api'; import type { Product } from '@store/types';
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787/api';
-export default function AdminProducts() { const [products, setProducts] = useState<Product[]>([]); const [error, setError] = useState(''); const load = async () => { try { setProducts(await api<Product[]>('/admin/products')) } catch (e) { setError(e instanceof Error ? e.message : 'Request failed') } }; useEffect(() => { void load() }, []); async function add(e: FormEvent<HTMLFormElement>) { e.preventDefault(); const f = new FormData(e.currentTarget); try { await api('/admin/products', { method: 'POST', body: JSON.stringify({ name: f.get('name'), description: f.get('description'), priceCents: Number(f.get('priceCents')), stock: Number(f.get('stock')) }) }); e.currentTarget.reset(); void load() } catch (e) { setError(e instanceof Error ? e.message : 'Could not create product') } } async function upload(id: string, e: FormEvent<HTMLFormElement>) { e.preventDefault(); try { const res = await fetch(`${API}/admin/products/${id}/images`, { method: 'POST', credentials: 'include', body: new FormData(e.currentTarget) }); if (!res.ok) throw new Error((await res.json()).error); e.currentTarget.reset(); void load() } catch (e) { setError(e instanceof Error ? e.message : 'Upload failed') } } return <><div className="space"><h1>Admin: products</h1><Link href="/admin/orders">Manage orders</Link></div>{error && <p className="error">{error} — sign in with the seeded admin account.</p>}<form onSubmit={add} className="card"><h2>New product</h2><label>Name<input name="name" required /></label><label>Description<textarea name="description" required /></label><label>Price in cents<input name="priceCents" type="number" required /></label><label>Stock<input name="stock" type="number" required /></label><button>Create product</button></form><table><thead><tr><th>Name</th><th>Price</th><th>Stock / image</th></tr></thead><tbody>{products.map(p => <tr key={p.id}><td>{p.name}</td><td>{money(p.priceCents)}</td><td>{p.stock}<form onSubmit={e => upload(p.id, e)}><input name="file" type="file" accept="image/*" required /><input name="altText" placeholder="Image description" /><button>Upload to R2</button></form></td></tr>)}</tbody></table></> }
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { AdminShell } from '@/components/AdminShell';
+import { api, money } from '@/lib/api';
+import type { Product } from '@store/types';
+
+function AdminProductsContent() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [error, setError] = useState('');
+
+  const load = async () => {
+    try { setProducts(await api<Product[]>('/admin/products')); }
+    catch (reason) { setError(reason instanceof Error ? reason.message : 'Request failed'); }
+  };
+
+  useEffect(() => { void load(); }, []);
+
+  return <main className="page"><div className="page-heading"><div><p className="eyebrow">Store operations</p><h1>Products</h1><p>Manage catalog availability and stock.</p></div><Link className="button" href="/admin/products/new">Add product</Link></div>{error && <p className="error">{error}</p>}<section className="admin-list-section"><div className="space"><div><p className="eyebrow">Catalog</p><h2>Product list</h2></div><span className="status">{products.length} products</span></div><div className="table-wrap"><table><thead><tr><th>Product</th><th>Price</th><th>Availability</th><th>Stock</th></tr></thead><tbody>{products.map((product) => <tr key={product.id}><td><div className="product-cell">{product.images[0] ? <img className="product-thumb" src={product.images[0].url} alt="" /> : <span className="product-thumb product-thumb-empty" />}<div><strong>{product.name}</strong><br /><small>{product.category?.name || 'Uncategorized'}</small></div></div></td><td>{money(product.priceCents)}</td><td><span className="status">{product.active ? 'Active' : 'Hidden'}</span></td><td><span className={product.stock <= 5 ? 'stock-low' : ''}>{product.stock} in stock</span></td></tr>)}</tbody></table></div></section></main>;
+}
+
+export default function AdminProducts() {
+  return <AdminShell><AdminProductsContent /></AdminShell>;
+}
