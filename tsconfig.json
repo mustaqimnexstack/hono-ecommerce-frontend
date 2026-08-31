@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@store/types": ["./lib/types.ts"]
     }
   },
   "include": [
