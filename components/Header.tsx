@@ -12,7 +12,7 @@ export function Header() {
       <nav className="header-actions" aria-label="Primary navigation">
         <Link href="/">Home</Link>
         <Link href="/products">Shop</Link>
-        <form className="header-search" action="/products" role="search">
+        <form className="header-search mx-[100px]" action="/products" role="search">
           <label className="sr-only" htmlFor="store-search">Search products</label>
           <input id="store-search" name="q" type="search" placeholder="Search products" />
           <button type="submit">Search</button>
