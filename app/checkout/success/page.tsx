@@ -1,2 +1,10 @@
-'use client'; import Link from 'next/link'; import { useSearchParams } from 'next/navigation';
-export default function Success(){const query=useSearchParams();return <section><h1>Order received</h1><p>Your test order <strong>{query.get('id')}</strong> was created.</p><Link href="/account/orders"><button>View orders</button></Link></section>}
+'use client';
+
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+
+export default function Success() {
+  const searchParams = useSearchParams();
+  const id = searchParams.get('id');
+  return <main className="page"><section className="auth-card"><p className="eyebrow">Order confirmed</p><h1>Thanks for your order.</h1><p className="auth-intro">Your test order{ id ? <> <strong>#{id.slice(-8).toUpperCase()}</strong></> : '' } has been created. We’ll use the shipping address you provided.</p><Link className="button" href="/products">Continue shopping</Link></section></main>;
+}
