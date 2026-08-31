@@ -1,3 +1,20 @@
 const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8787/api';
-export async function api<T>(path: string, options: RequestInit = {}): Promise<T> { const res = await fetch(`${API}${path}`, { ...options, credentials: 'include', headers: { 'Content-Type': 'application/json', ...options.headers } }); if (!res.ok) { const body = await res.json().catch(() => ({})); throw new Error(body.error || 'Request failed'); } return res.status === 204 ? undefined as T : res.json(); }
-export const money = (cents: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(cents / 100);
+export async function api<T>(
+  path: string,
+  options: RequestInit = {},
+): Promise<T> {
+  const res = await fetch(`${API}${path}`, {
+    ...options,
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', ...options.headers },
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(body.error || 'Request failed');
+  }
+  return res.status === 204 ? (undefined as T) : res.json();
+}
+export const money = (cents: number) =>
+  new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(
+    cents / 100,
+  );

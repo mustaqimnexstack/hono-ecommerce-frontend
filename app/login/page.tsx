@@ -1,11 +1,11 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useState } from 'react';
+import { FormEvent, Suspense, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { api } from '@/lib/api';
 
-export default function Login() {
+function LoginContent() {
   const [error, setError] = useState('');
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,4 +25,8 @@ export default function Login() {
   }
 
   return <main className="auth-page"><section className="auth-card"><p className="eyebrow">Welcome back</p><h1>Sign in to Field Store</h1><p className="auth-intro">Pick up where you left off, review orders, and check out with ease.</p><form onSubmit={submit}><label>Email address<input name="email" type="email" autoComplete="email" required /></label><label>Password<input name="password" type="password" autoComplete="current-password" required /></label>{error && <p className="error" role="alert">{error}</p>}<button type="submit">Sign in</button></form><p className="auth-switch">New here? <Link href="/register">Create an account</Link>.</p></section></main>;
+}
+
+export default function Login() {
+  return <Suspense fallback={<main className="route-loading"><p>Loading sign in…</p></main>}><LoginContent /></Suspense>;
 }
