@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "rule": "SITEMAP",
+  "url": "https://hono-ecommerce-frontend.vercel.app/",
+  "expectedResourceSha256": "efabb79d16cfa0e0dd9a173d1be5e9648677c67452ba956162da2bc7aebc7dce"
+}
