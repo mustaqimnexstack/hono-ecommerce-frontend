@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "rule": "MISSING_SCHEMA",
+  "url": "https://hono-ecommerce-frontend.vercel.app/",
+  "expectedSchema": {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Simple things for a well-lived day.",
+    "url": "https://hono-ecommerce-frontend.vercel.app/"
+  }
+}
