@@ -31,5 +31,5 @@ function ProductsContent() {
 }
 
 export default function Products() {
-  return <Suspense fallback={<main className="route-loading"><p>Loading products…</p></main>}><ProductsContent /></Suspense>;
+  return (<>{<Suspense fallback={<main className="route-loading"><p>Loading products…</p></main>}><ProductsContent /></Suspense>}<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: "{\"@context\":\"https://schema.org\",\"@type\":\"WebPage\",\"name\":\"Field Store\",\"url\":\"https://hono-ecommerce-frontend.vercel.app/products\"}" }} /></>);
 }
